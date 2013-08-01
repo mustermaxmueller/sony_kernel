@@ -73,3 +73,5 @@ obj-$(CONFIG_IR_REMOTE) += ir_remote.o
 obj-$(CONFIG_AD7146) += ad7146.o
 obj-$(CONFIG_LDO_VIBRATOR)	+= ldo_vibrator.o
 obj-y				+= qcom/
+obj-$(CONFIG_FSYNC_CONTROL)  += fsync_control.o
+

@@ -675,6 +675,15 @@ config AD7146
 	  If you say yes here you get support for the AD7146 chip.
 	  This is used as a proximity sensor.
 
+config FSYNC_CONTROL
+        bool "Support for FSync Control"
+        default y
+        help
+          Say Y here to enable FSync Control
+
+	  purposes including software controlled brightness of backlight,
+	  motor control, and waveform generation.
+
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
