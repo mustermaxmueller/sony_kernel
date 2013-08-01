@@ -72,3 +72,5 @@ obj-$(CONFIG_QCOM_LIQUID_DOCK)	+= qcom_liquid_dock.o
 obj-$(CONFIG_IR_REMOTE) += ir_remote.o
 obj-$(CONFIG_AD7146) += ad7146.o
 obj-y				+= qcom/
+obj-$(CONFIG_FSYNC_CONTROL)  += fsync_control.o
+
