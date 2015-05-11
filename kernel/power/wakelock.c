@@ -55,7 +55,7 @@ ssize_t pm_show_wakelocks(char *buf, bool show_active)
 }
 
 #if CONFIG_PM_WAKELOCKS_LIMIT > 0
-static unsigned int number_of_wakelocks;
+static unsigned int number_of_wakelocks = 0;
 
 static inline bool wakelocks_limit_exceeded(void)
 {
@@ -70,6 +70,14 @@ static inline void increment_wakelocks_number(void)
 static inline void decrement_wakelocks_number(void)
 {
 	number_of_wakelocks--;
+}
+
+bool has_wake_lock(void)
+{
+	bool ret = 0;
+	if (number_of_wakelocks >= 1)
+		ret = 1;
+	return ret;
 }
 #else /* CONFIG_PM_WAKELOCKS_LIMIT = 0 */
 static inline bool wakelocks_limit_exceeded(void) { return false; }

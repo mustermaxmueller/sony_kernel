@@ -31,6 +31,9 @@
 #include <trace/events/power.h>
 #include <linux/wakeup_reason.h>
 
+#include <linux/wakelock.h>
+#include <linux/quickwakeup.h>
+
 #include "power.h"
 
 struct pm_sleep_state pm_states[PM_SUSPEND_MAX] = {
@@ -163,6 +166,42 @@ void __attribute__ ((weak)) arch_suspend_enable_irqs(void)
 	local_irq_enable();
 }
 
+static int _suspend_enter(suspend_state_t state, bool *wakeup)
+{
+	char suspend_abort[MAX_SUSPEND_ABORT_LEN];
+	int error;
+
+	arch_suspend_disable_irqs();
+	BUG_ON(!irqs_disabled());
+
+	error = syscore_suspend();
+	if (!error) {
+		*wakeup = pm_wakeup_pending();
+		if (!(suspend_test(TEST_CORE) || *wakeup)) {
+			error = suspend_ops->enter(state);
+			events_check_enabled = false;
+		} else if (*wakeup) {
+			pm_get_active_wakeup_sources(suspend_abort,
+				MAX_SUSPEND_ABORT_LEN);
+			log_suspend_abort_reason(suspend_abort);
+			error = -EBUSY;
+		}
+
+		start_logging_wakeup_reasons();
+		syscore_resume();
+	}
+
+	if (!error) {
+#ifdef CONFIG_QUICK_WAKEUP
+		quickwakeup_check();
+#endif
+	}
+
+	arch_suspend_enable_irqs();
+	BUG_ON(irqs_disabled());
+	return error;
+}
+
 /**
  * suspend_enter - Make the system enter the given sleep state.
  * @state: System sleep state to enter.
@@ -172,7 +211,6 @@ void __attribute__ ((weak)) arch_suspend_enable_irqs(void)
  */
 static int suspend_enter(suspend_state_t state, bool *wakeup)
 {
-	char suspend_abort[MAX_SUSPEND_ABORT_LEN];
 	int error, last_dev;
 
 	if (need_suspend_ops(state) && suspend_ops->prepare) {
@@ -216,29 +254,14 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
 		log_suspend_abort_reason("Disabling non-boot cpus failed");
 		goto Enable_cpus;
 	}
-
-	arch_suspend_disable_irqs();
-	BUG_ON(!irqs_disabled());
-
-	error = syscore_suspend();
-	if (!error) {
-		*wakeup = pm_wakeup_pending();
-		if (!(suspend_test(TEST_CORE) || *wakeup)) {
-			error = suspend_ops->enter(state);
-			events_check_enabled = false;
-		} else if (*wakeup) {
-			pm_get_active_wakeup_sources(suspend_abort,
-				MAX_SUSPEND_ABORT_LEN);
-			log_suspend_abort_reason(suspend_abort);
-			error = -EBUSY;
+	error = _suspend_enter(state, wakeup);
+#ifdef CONFIG_QUICK_WAKEUP
+		while (!error && !quickwakeup_execute()) {
+			if (has_wake_lock())
+				break;
+			error = _suspend_enter(state, wakeup);
 		}
-
-		start_logging_wakeup_reasons();
-		syscore_resume();
-	}
-
-	arch_suspend_enable_irqs();
-	BUG_ON(irqs_disabled());
+#endif
 
  Enable_cpus:
 	enable_nonboot_cpus();

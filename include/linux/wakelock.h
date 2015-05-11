@@ -64,4 +64,8 @@ static inline int wake_lock_active(struct wake_lock *lock)
 	return lock->ws.active;
 }
 
+#if CONFIG_PM_WAKELOCKS_LIMIT > 0
+bool has_wake_lock(void);
+#endif
+
 #endif
