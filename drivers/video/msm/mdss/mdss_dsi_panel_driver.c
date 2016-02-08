@@ -3497,6 +3497,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 	static const char *panel_name;
 	struct mdss_panel_info *pinfo = &(ctrl_pdata->panel_data.panel_info);
 	struct mdss_panel_specific_pdata *spec_pdata = NULL;
+	bool doing_cmd_detection = false;
 
 	spec_pdata = ctrl_pdata->spec_pdata;
 	if (!spec_pdata) {
@@ -3513,6 +3514,10 @@ static int mdss_panel_parse_dt(struct device_node *np,
 
 			if (driver_ic != tmp)
 				continue;
+
+			rc = of_property_read_u32(next, "somc,dric-only-detect", &res[0]);
+			if (res[0])
+				goto parse;
 
 			data = of_get_property(next, "somc,panel-id", &len);
 			if (!data) {
@@ -3545,6 +3550,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 						, "somc,panel-detect", &tmp);
 					spec_pdata->panel_detect =
 							!rc ? tmp : 0;
+					doing_cmd_detection = true;
 				}
 			}
 		} else {
@@ -3564,7 +3570,7 @@ static int mdss_panel_parse_dt(struct device_node *np,
 				continue;
 			//spec_pdata->driver_ic = tmp;
 		}
-
+parse:
 		panel_name = of_get_property(next,
 			"qcom,mdss-dsi-panel-name", NULL);
 		if (!panel_name) {
@@ -3683,10 +3689,12 @@ static int mdss_panel_parse_dt(struct device_node *np,
 			"qcom,mdss-dsi-bl-pmic-control-type", NULL);
 		if (data) {
 			if (!strncmp(data, "bl_ctrl_wled", 12)) {
-				led_trigger_register_simple("bkl-trigger",
-					&bl_led_trigger);
-				pr_debug("%s: SUCCESS WLED TRIGGER register\n",
-					__func__);
+				if (!doing_cmd_detection) {
+					led_trigger_register_simple("bkl-trigger",
+						&bl_led_trigger);
+					pr_info("%s: SUCCESS WLED TRIGGER register\n",
+						__func__);
+				}
 				ctrl_pdata->bklt_ctrl = BL_WLED;
 			} else if (!strncmp(data, "bl_ctrl_pwm", 11)) {
 				ctrl_pdata->bklt_ctrl = BL_PWM;
