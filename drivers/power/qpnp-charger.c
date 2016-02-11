@@ -36,6 +36,7 @@
 #include <linux/spinlock.h>
 #include <linux/input.h>
 #include <linux/switch.h>
+#include <linux/qpnp-led-rgb.h>
 
 /* Interrupt offsets */
 #define INT_RT_STS(base)			(base + 0x10)
@@ -4827,6 +4828,12 @@ qpnp_chg_adjust_vddmax(struct qpnp_chg_chip *chip, int vbat_mv)
 	qpnp_chg_set_appropriate_vddmax(chip);
 }
 
+static void show_chg_done(void)
+{
+	qpnp_led_rgb_set(COLOR_GREEN, 255);
+	qpnp_led_rgb_set(COLOR_BLUE, 255);
+}
+
 #define CONSECUTIVE_COUNT	3
 static void
 qpnp_eoc_work(struct work_struct *work)
@@ -4906,6 +4913,8 @@ qpnp_eoc_work(struct work_struct *work)
 				if (!chip->bat_is_warm) {
 					pr_info("End of Charging\n");
 					chip->chg_done = true;
+					/* Switch LED color to cyan to indicate that eoc is reached. */
+					show_chg_done();
 				} else {
 					pr_info("stop charging: battery is warm, vddmax = %d reached\n",
 						qpnp_chg_vddmax_get(chip));
