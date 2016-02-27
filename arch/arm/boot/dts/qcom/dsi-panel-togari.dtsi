@@ -139,6 +139,7 @@
 		qcom,mdss-dsi-reset-sequence = <1 20>, <0 200>, <1 20>;
 
 		somc,panel-id = [ff];
+		somc,panel-id-read-cmds;
 		somc,panel-detect = <1>;
 		somc,disp-en-off-pre = <10>;
 		somc,disp-en-off-post = <10>;
@@ -284,6 +285,7 @@
 		qcom,mdss-dsi-reset-sequence = <1 20>, <0 200>, <1 20>;
 
 		somc,panel-id = [12 70 61 57];
+		somc,panel-id-read-cmds;
 		somc,driver-ic = <0>;
 		somc,disp-en-off-pre = <10>;
 		somc,disp-en-off-post = <10>;
@@ -486,6 +488,7 @@
 		qcom,mdss-dsi-reset-sequence = <1 20>, <0 200>, <1 20>;
 
 		somc,panel-id = [12 74 20 38];
+		somc,panel-id-read-cmds;
 		somc,driver-ic = <0>;
 		somc,disp-en-off-pre = <10>;
 		somc,disp-en-off-post = <10>;
@@ -1025,6 +1028,7 @@
 		somc,mdss-dsi-pre-uv-command = [23 01 00 00 00 00 02 B0 04];
 
 		somc,panel-id = [ff];
+		somc,panel-id-read-cmds;
 		somc,panel-detect = <1>;
 		somc,disp-en-off-pre = <10>;
 		somc,disp-en-off-post = <10>;
@@ -1506,6 +1510,7 @@
 		qcom,mdss-dsi-reset-sequence = <1 20>, <0 200>, <1 20>;
 
 		somc,panel-id = [12 70 61 56];
+		somc,panel-id-read-cmds;
 		somc,driver-ic = <1>;
 		somc,disp-en-off-pre = <10>;
 		somc,disp-en-off-post = <10>;
