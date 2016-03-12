@@ -1154,6 +1154,9 @@
 		qcom,qos-freq = <19200>;
 		qcom,hw-sel = "BIMC";
 		qcom,rpm-en;
+		qcom,nfab = <6>;
+		qcom,nr-lim-thresh = <1638400>;
+		qcom,eff-fact = <60>;
 
 		coresight-id = <55>;
 		coresight-name = "coresight-bimc";
@@ -1180,6 +1183,7 @@
 			qcom,bimc,bw = <300000 450000>;
 			qcom,bimc,gp = <5000>;
 			qcom,bimc,thmp = <50>;
+			qcom,nr-lim;
 		};
 
 		mas-ampss-m1 {
