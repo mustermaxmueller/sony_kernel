@@ -22,6 +22,7 @@
 		qcom,qos-freq = <4800>;
 		qcom,hw-sel = "NoC";
 		qcom,rpm-en;
+		qcom,nfab = <7>;
 
 		coresight-id = <52>;
 		coresight-name = "coresight-mnoc";
@@ -268,6 +269,7 @@
 		qcom,qos-freq = <4800>;
 		qcom,hw-sel = "NoC";
 		qcom,rpm-en;
+		qcom,nfab = <7>;
 
 		coresight-id = <50>;
 		coresight-name = "coresight-snoc";
@@ -538,6 +540,7 @@
 		qcom,ntieredslaves = <0>;
 		qcom,hw-sel = "NoC";
 		qcom,rpm-en;
+		qcom,nfab = <7>;
 
 		coresight-id = <54>;
 		coresight-name = "coresight-pnoc";
@@ -804,6 +807,7 @@
 		qcom,ntieredslaves = <0>;
 		qcom,hw-sel = "NoC";
 		qcom,rpm-en;
+		qcom,nfab = <7>;
 
 		mas-rpm-inst {
 			cell-id = <72>;
@@ -1154,6 +1158,7 @@
 		qcom,qos-freq = <19200>;
 		qcom,hw-sel = "BIMC";
 		qcom,rpm-en;
+		qcom,nfab = <7>;
 
 		coresight-id = <55>;
 		coresight-name = "coresight-bimc";
@@ -1267,6 +1272,7 @@
 		qcom,ntieredslaves = <0>;
 		qcom,hw-sel = "NoC";
 		qcom,rpm-en;
+		qcom,nfab = <7>;
 		qcom,virt;
 
 		mas-v-ocmem-gfx3d {
@@ -1321,6 +1327,7 @@
 		qcom,qos-freq = <4800>;
 		qcom,hw-sel = "NoC";
 		qcom,rpm-en;
+		qcom,nfab = <7>;
 
 		coresight-id = <51>;
 		coresight-name = "coresight-onoc";
