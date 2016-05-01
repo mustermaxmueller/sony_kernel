@@ -48,8 +48,8 @@
 #include <linux/clk.h>
 #endif
 
-#define FRAME_SIZE		(255 + 3)
-#define MAX_FRAME_SIZE	(1023 + 5)
+#define FRAME_SIZE_COMPAT	(255 + 3)
+#define FRAME_SIZE 		(1023 + 5)
 
 #define NFC_DEBUG 0
 #define MAX_TRY_I2C_READ	10
@@ -160,15 +160,20 @@ static ssize_t pn547_dev_read(struct file *filp, char __user *buf,
 	int readingWatchdog = 0;
 	bool fwdl;
 
-	tmp = kcalloc(MAX_FRAME_SIZE, sizeof(char*), GFP_KERNEL);
-
 	mutex_lock(&pn547_dev->read_mutex);
 
 	fwdl = pn547_dev->state == PN547_STATE_FWDL;
-	maxlen = fwdl ? MAX_FRAME_SIZE : FRAME_SIZE;
+	maxlen = fwdl ? FRAME_SIZE : FRAME_SIZE_COMPAT;
 
 	if (count > maxlen)
 		count = maxlen;
+
+	tmp = kzalloc(count * sizeof(char), GFP_KERNEL);
+	if (tmp == NULL) {
+		pr_err("%s: Failed to allocate %s tmp\n", __func__, tmp);
+		ret = -EFAULT;
+		goto fail;
+	}
 
 	pr_debug("%s : reading %zu bytes. irq=%s\n", __func__, count,
 		 gpio_get_value(pn547_dev->irq_gpio) ? "1" : "0");
@@ -230,23 +235,23 @@ wait_irq:
 	if (ret < 0) {
 		pr_err("%s: i2c_master_recv returned %d\n", __func__,
 				ret);
-		goto memory_free;
+		goto free_memory;
 	}
 
 	if (ret > count) {
 		pr_err("%s: received too many bytes from i2c (%d)\n",
 				__func__, ret);
 		ret = -EIO;
-		goto memory_free;
+		goto free_memory;
 	}
 
 	if (copy_to_user(buf, tmp, ret)) {
 		pr_err("%s : failed to copy to user space\n", __func__);
 		ret = -EFAULT;
-		goto memory_free;
+		goto free_memory;
 	}
 
-memory_free:
+free_memory:
 	kfree(tmp);
 	return ret;
 
@@ -265,22 +270,28 @@ static ssize_t pn547_dev_write(struct file *filp, const char __user *buf,
 	bool fwdl;
 
 	pn547_dev = filp->private_data;
-	tmp = kcalloc(MAX_FRAME_SIZE, sizeof(char*), GFP_KERNEL);
 
 #if NFC_DEBUG
 	pr_info("pn547 : + w\n");
 #endif
 
 	fwdl = pn547_dev->state == PN547_STATE_FWDL;
-	maxlen = fwdl ? MAX_FRAME_SIZE : FRAME_SIZE;
+	maxlen = fwdl ? FRAME_SIZE : FRAME_SIZE_COMPAT;
 
 	if (count > maxlen)
 		count = maxlen;
 
+	tmp = kzalloc(count * sizeof(char), GFP_KERNEL);
+	if (tmp == NULL) {
+		pr_err("%s: Failed to allocate %s tmp\n", __func__, tmp);
+		ret = -EFAULT;
+		goto free_memory;
+	}
+
 	if (copy_from_user(tmp, buf, count)) {
 		pr_err("%s : failed to copy from user space\n", __func__);
-		kfree(tmp);
-		return -EFAULT;
+		ret = -EFAULT;
+		goto free_memory;
 	}
 
 	pr_debug("%s : writing %zu bytes.\n", __func__, count);
@@ -305,8 +316,8 @@ static ssize_t pn547_dev_write(struct file *filp, const char __user *buf,
 		ret = -EIO;
 	}
 
+free_memory:
 	kfree(tmp);
-
 	return ret;
 }
 
