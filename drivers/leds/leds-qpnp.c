@@ -32,6 +32,10 @@
 #define SONY_LEGACY_TORCH
 #endif
 
+#if defined(CONFIG_MACH_SONY_SHINANO) || defined(CONFIG_MACH_SONY_RHINE)
+#define SONY_LEGACY_TORCH
+#endif
+
 #define WLED_MOD_EN_REG(base, n)	(base + 0x60 + n*0x10)
 #define WLED_IDAC_DLY_REG(base, n)	(WLED_MOD_EN_REG(base, n) + 0x01)
 #define WLED_FULL_SCALE_REG(base, n)	(WLED_IDAC_DLY_REG(base, n) + 0x01)
