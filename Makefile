@@ -1,6 +1,6 @@
 VERSION = 3
 PATCHLEVEL = 10
-SUBLEVEL = 99
+SUBLEVEL = 101
 EXTRAVERSION =
 NAME = TOSSUG Baby Fish
 
@@ -382,36 +382,6 @@ KBUILD_AFLAGS   := -D__ASSEMBLY__
 KBUILD_AFLAGS_MODULE  := -DMODULE
 KBUILD_CFLAGS_MODULE  := -DMODULE
 KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
-
-GRAPHITE_FLAGS = -fgraphite -fgraphite-identity -floop-flatten -floop-parallelize-all -ftree-loop-linear -floop-interchange
-#-floop-nest-optimize -floop-strip-mine -floop-block 
-OPENMP_FLAGS = -lgomp -ldl -lgcc -fopenmp -ftree-parallelize-loops=4
-SABERMOD_FLAGS = -DNDEBUG -mtune=cortex-a15 -mcpu=cortex-a15 -marm -mfpu=neon-vfpv4 \
-                 -mvectorize-with-neon-quad -ftree-slp-vectorize \
-                 -pipe -fgcse-lm -fgcse-sm \
-                 -fsingle-precision-constant -fforce-addr \
-                 -fsched-spec-load -fpredictive-commoning \
-                 -ffast-math \
-                 -munaligned-access \
-                 -funsafe-math-optimizations \
-                 -ffinite-math-only
-                 #-ftree-vectorize
-                 #-ftracer
-                 #-funroll-loops
-
-TARGET_CPU_PARAMETER_FLAGS = --param l1-cache-size=16 --param l1-cache-line-size=64 --param l2-cache-size=2048
-#--param simultaneous-prefetches=8 --param prefetch-latency=120
-
-KERNEL_FLAGS = $(SABERMOD_FLAGS) $(TARGET_CPU_PARAMETER_FLAGS)
-#$(GRAPHITE_FLAGS) 
-#$(OPENMP_FLAGS)
-
-GPU_FLAGS = -O3 $(KERNEL_FLAGS)
-KBUILD_AFLAGS	+= $(KBUILD_AFLAGS:-msoft-float=-Wa,-mfpu=neon-vfpv4 -mfloat-abi=hard -ffast-math -fsingle-precision-constant)
-CFLAGS_KERNEL	+= $(KERNEL_FLAGS)
-KBUILD_CFLAGS   += $(KERNEL_FLAGS)
-KBUILD_CPPFLAGS += $(KERNEL_FLAGS)
-KBUILD_CFLAGS_KERNEL += $(KERNEL_FLAGS)
 
 # Read KERNELRELEASE from include/config/kernel.release (if it exists)
 KERNELRELEASE = $(shell cat include/config/kernel.release 2> /dev/null)
