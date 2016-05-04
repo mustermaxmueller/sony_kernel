@@ -1149,6 +1149,7 @@ static int req_crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	}
 
 	req_crypt_queue = alloc_workqueue("req_cryptd",
+					WQ_HIGHPRI |
 					WQ_UNBOUND |
 					WQ_CPU_INTENSIVE |
 					WQ_MEM_RECLAIM,
@@ -1160,6 +1161,7 @@ static int req_crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	}
 
 	req_crypt_split_io_queue = alloc_workqueue("req_crypt_split",
+					WQ_HIGHPRI |
 					WQ_UNBOUND |
 					WQ_CPU_INTENSIVE |
 					WQ_MEM_RECLAIM,
