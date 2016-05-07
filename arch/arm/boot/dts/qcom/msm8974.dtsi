@@ -309,6 +309,8 @@
 		qcom,firmware-name = "venus";
 		qcom,ocmem-size = <524288>; /* 512 * 1024*/
 		qcom,max-hw-load = <1216800>; /* 3840 x 2160 @ 30 + 1080p @ 30*/
+		qcom,dcvs-min-load = <489600>; /* 1080p @ 60fps */
+		qcom,dcvs-min-mbperframe = <32400>; /* 4K */
 		qcom,clock-configs = <0x3 0x0 0x0 0x0>;
 		qcom,sw-power-collapse;
 
@@ -1828,12 +1830,12 @@
 		qcom,adsp-state = <0>;
 	};
 
-	adsp: qcom,msmapr-audio {
+	qcom,msmapr-audio {
 		compatible = "qcom,msmapr-audio";
 		qcom,apr-dest-type = "ADSP";
 	};
 
-	ion: qcom,msm-audio-ion {
+	qcom,msm-audio-ion {
 		compatible = "qcom,msm-audio-ion";
 	};
 
@@ -1849,7 +1851,7 @@
 		qcom,latency-level = "regular";
 	};
 
-	pcm2: qcom,msm-pcm-ultra-low-latency {
+	pcm2: qcom,msm-ultra-low-latency {
 		compatible = "qcom,msm-pcm-dsp";
 		qcom,msm-pcm-dsp-id = <2>;
 		qcom,msm-pcm-low-latency;
@@ -2197,7 +2199,7 @@
 		gpios = <&msmgpio 36 0>, <&msmgpio 37 0>, <&msmgpio 38 0>, <&msmgpio 39 0>, <&msmgpio 40 0>;
 		qcom,has-48mhz-xo;
 		qcom,has-pronto-hw;
-		qcom,wcnss-pm = <11 21 1200 1 1 6>;
+		qcom,wcnss-pm = <11 19 1200 1 1 6>;
 	};
 
 	qcom,ocmem@fdd00000 {
