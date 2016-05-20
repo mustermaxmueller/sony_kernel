@@ -98,6 +98,12 @@
 	};
 };
 
+/{
+	rhine_togari_batterydata: qcom,battery-data {
+		#include "batterydata-rhine-togari.dtsi"
+	};
+};
+
 &pm8941_chg {
 	qcom,ibatmax-ma = <2000>;
 	qcom,ibatterm-ma = <150>;
@@ -111,6 +117,7 @@
 };
 
 &pm8941_bms {
+	qcom,battery-data = <&rhine_togari_batterydata>;
 	qcom,fcc-resolution = <13>;
 	qcom,chg-term-ua = <150000>;
 };
