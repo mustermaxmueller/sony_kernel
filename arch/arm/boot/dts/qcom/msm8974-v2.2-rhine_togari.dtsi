@@ -51,10 +51,10 @@
 			button_code2 = <0>;
 			button_code3 = <0>;
 			touch_pressure_enabled = <1>;
-			touch_size_enabled = <0>;
+			touch_size_enabled = <1>;
 			touch_orientation_enabled = <0>;
-			glove_enabled = <0>;
-			report_pen_as_finger = <1>;
+			glove_enabled = <1>;
+			report_pen_as_finger = <0>;
 			wakeup_gesture_support = <1>;
 			wakeup_gesture_timeout = <2000>;
 			wakeup_gesture {
@@ -102,8 +102,8 @@
 	qcom,ibatmax-ma = <2000>;
 	qcom,ibatterm-ma = <150>;
 	qcom,ibatsafe-ma = <2000>;
-	qcom,maxinput-dc-ma = <1800>;
-	qcom,maxinput-usb-ma = <1500>;
+	qcom,maxinput-dc-ma = <2000>;
+	qcom,maxinput-usb-ma = <2000>;
 	qcom,ibatmax-warm-ma = <900>;
 	qcom,ibatmax-cool-ma = <900>;
 	qcom,thermal-mitigation = <2000 1500 1100 900 700 500 300 200 100 0>;
