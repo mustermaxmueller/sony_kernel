@@ -402,7 +402,7 @@ SABERMOD_FLAGS = -DNDEBUG -mtune=cortex-a15 -mcpu=cortex-a15 -marm -mfpu=neon-vf
 TARGET_CPU_PARAMETER_FLAGS = --param l1-cache-size=16 --param l1-cache-line-size=64 --param l2-cache-size=2048
 #--param simultaneous-prefetches=8 --param prefetch-latency=120
 
-KERNEL_FLAGS = $(SABERMOD_FLAGS) $(TARGET_CPU_PARAMETER_FLAGS)
+KERNEL_FLAGS = $(SABERMOD_FLAGS) $(TARGET_CPU_PARAMETER_FLAGS) $(GRAPHITE_FLAGS)
 #$(GRAPHITE_FLAGS) 
 #$(OPENMP_FLAGS)
 
